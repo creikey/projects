@@ -1,0 +1,6 @@
+#!/bin/bash
+
+prj() {
+	echo test
+	eval `projects "$@"`
+}
