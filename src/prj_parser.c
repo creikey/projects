@@ -5,7 +5,7 @@
 
 #include "prj_parser.h"
 
-#define BUFFER_SIZE 100
+const char * categories[] = { "dir", "exec", "description" };
 
 /* An example project file --
  *
@@ -17,6 +17,19 @@
  * A small example program
 */
 
+int check_prj_struct( prj_file * file ) {
+  for( size_t i = 0; i < file->size; i+=2 ) {
+    for( int ii = 0; i < sizeof(categories); ii++ ) {
+      if( strcmp(file->data[i], categories[ii]) != 0 ) {
+        printf( "Category not found: %s\n", file->data[i] );
+        return -1;
+      }
+    }
+  }
+  printf( "Valid file\n" );
+  return 0;
+}
+
 int get_numb_lines( FILE * to_read ) {
   int counter=0;
   while( smart_fgets( to_read, BUFFER_SIZE ) != NULL ) {
@@ -26,15 +39,24 @@ int get_numb_lines( FILE * to_read ) {
   return counter;
 }
 
+void error_check_file( FILE * to_check, bool verbose ) {
+  if( verbose ) {
+    printf( "Error checking file...\n" );
+  }
+  if( to_check == NULL ) {
+    printf( "FATAL: Input file was null line %d function %s\n", __LINE__, __func__ );
+  }
+}
+
 char * smart_fgets( FILE * to_read, size_t buffer_size ) {
   int cur_buff_size = 1;
   int cur = 0;
   char * to_return = malloc( cur_buff_size*buffer_size*sizeof(char) );
   while( true ) {
     char read = fgetc( to_read );
-    if( read == '\n' || read == EOF ) {
+    /*if( read == '\n' || read == EOF ) {
       break;
-    }
+    }*/
     if( cur > (buffer_size*cur_buff_size)-3 ) {
       size_t tmp_size = cur_buff_size*buffer_size*sizeof(char);
       char * tmp = malloc( tmp_size );
@@ -46,9 +68,12 @@ char * smart_fgets( FILE * to_read, size_t buffer_size ) {
       free(tmp);
     }
     to_return[cur] = read;
+    if( read == '\n' || read == EOF ) {
+      break;
+    }
     cur += 1;
   }
-  if( cur == 0 ) {
+  if( to_return[0] == EOF ) {
     free(to_return);
     return NULL;
   }
