@@ -1,4 +1,4 @@
-exec_name=prj
+exec_name=projects
 
 .PHONY: clean
 
@@ -22,4 +22,5 @@ prj_parser.o: prj_parser.c prj_parser.h
 clean:
 	-rm $(objects)
 	-rm $(exec_name)
+	-rm *.gch
 

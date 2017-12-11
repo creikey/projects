@@ -10,8 +10,15 @@ fi
 exec_path=$(pwd)
 bashrc_path="/home/$to_user/.bashrc"
 
+if [ "$1" == "--help" ]
+then
+	echo -e -n "Installs prj:\n--uninstall - uninstalls from bashrc\nno args - installs to bashrc\n"
+	exit
+fi
+
 if [ "$1" == "--uninstall" ]
 then
+	echo "Uninstalling..."
 	line_numb=$(grep -n "Adds projects executable to path" ~/.bashrc | grep -Eo '^[^:]+')
 	other_line_numb=$(($line_numb+1))
 	sed -e "$line_numb,${other_line_numb}d" "$bashrc_path" > tmprc && mv tmprc "$bashrc_path"
