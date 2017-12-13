@@ -29,12 +29,13 @@ create_project_file() {
 prj() {
 	if [ "$1" == "-c" ] || [ "$1" == "--create" ]; then
 		echo "Creating projecet file in directory '$(pwd)'..."
-		if [ -f "*.prj" ]; then
+		count=`ls -1 *.prj 2>/dev/null | wc -l`	
+		if [ $count != 0 ]; then
 			echo -e -n "Project file exists! Continue? "
 			read -n1 ans
 			if [ "$ans" == "n" ]; then
 				echo -e -n "\nExiting...\n"
-				exit
+				return
 			else
 				create_project_file
 				return
