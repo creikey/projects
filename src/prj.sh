@@ -27,6 +27,10 @@ create_project_file() {
 }
 
 prj() {
+	if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+		echo -e -n "Project manager:\n-c | --create - creates a new project file in the directory\n-h | --help - displays this help menu\n"
+		return
+	fi
 	if [ "$1" == "-c" ] || [ "$1" == "--create" ]; then
 		echo "Creating projecet file in directory '$(pwd)'..."
 		count=`ls -1 *.prj 2>/dev/null | wc -l`	
@@ -45,4 +49,5 @@ prj() {
 			return
 		fi
 	fi
+	echo "Arg not found"
 }
